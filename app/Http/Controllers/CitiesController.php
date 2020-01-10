@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Delivery_date;
 use App\Delivery_times_span;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -157,17 +158,27 @@ class CitiesController extends Controller
         return view('cities.exclude-by-delivery-times',['data' =>$data]);
 
     }
-    //Form selected cities and numbers days
-    public function formCityDeliverydatesNumbers()
-    {
-        $data = City::all();
-        return view('cities.city-delivery-date-numbers-day',['data' => $data]);
-    }
     //selected cities and numbers days
-    public function getCityDeliverydatesNumbers($city_id,$number_of_days_to_get, Request $request)
+    public function getCityDeliverydatesNumbers($city_id,$number_of_days_to_get)
     {
-        $input = $request->all();
-        var_dump($input);die();
+        //$date_now = date('Y-m-d');
+        for($i=1; $i<=$number_of_days_to_get; $i++){
+
+            $date_now = Carbon::now();
+            $date = $date_now->add($i, 'days');
+            $data['day_name'][] = $date->format( 'l' );
+            $data['date'][] = date('Y-m-d', strtotime($date));
+            $data['delivery_times'][] = DB::table('city_delivery_times_span')
+                ->join('delivery_times_spans', 'city_delivery_times_span.delivery_times_span_id', '=', 'delivery_times_spans.id')
+                ->join('cities', 'city_delivery_times_span.city_id', '=', 'cities.id')
+                ->select('delivery_times_spans.*')
+                ->where('cities.id', '=', $city_id)
+                ->get();
+
+        }
+        return response()->json([
+            'dates' => $data
+        ],200, [], JSON_UNESCAPED_UNICODE);
     }
 
 

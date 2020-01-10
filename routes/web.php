@@ -26,9 +26,7 @@ Route::match(['post','get'],'/api/city/delivery-times/exclude','CitiesController
 //Exclude a city delivery date by excluding all of the daily delivery times
 Route::match(['post','get'],'/api/city/delivery-date/exclude','CitiesController@excludeCityDeliverydates')->name('exclude-city-delivery-dates');
 // By sending the city id return all of its delivery dates times in this format (of coarse excluded delivery dates, times shouldn't be returned)
-Route::post('api/city/{city_id}/delivery-dates-times/{number_of_days_to_get} ','CitiesController@getCityDeliverydatesNumbers')->name('get-city-delivery-dates-numbers');
-Route::get('/api/city/delivery-dates-times/number-days/form','CitiesController@formCityDeliverydatesNumbers')->name('form-city-delivery-dates-numbers');
-
+Route::get('api/city/{city_id}/delivery-dates-times/{number_of_days_to_get}','CitiesController@getCityDeliverydatesNumbers')->name('get-city-delivery-dates-numbers');
 
 
 
